@@ -35,6 +35,9 @@ create-fluent-container: ## Create and start the fluent container needed for the
 stop-fluent-container: ## Stop the fluent container needed for the tests
 	docker stop fluent-container
 
+remove-fluent-container: ## Remove the fluent container needed for the tests
+	docker rm fluent-container
+
 docker-network-create: ## Create the docker network needed to link the unit-test container and the fluent container
 	@echo "--- Creating the docker network"
 	docker network create megaphone-network
@@ -43,6 +46,8 @@ docker-network-remove: ## Remove the docker network needed to link the unit-test
 	@echo "--- Removing the docker network"
 	docker network remove megaphone-network
 
-tests: docker-network-create create-fluent-container unit-test stop-fluent-container docker-network-remove
+tests: docker-network-create create-fluent-container unit-test clean
+
+clean: stop-fluent-container remove-fluent-container docker-network-remove ## Clean up the fluent container and the docker network
 
 all: tests
