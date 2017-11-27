@@ -43,9 +43,9 @@ That behaviour ensures that unless you want to send events to the Megaphone [str
 ```golang
 // Configure a Megaphone client for your awesome service
 client, err := megaphone.NewClient(megaphone.Config{
-  origin: "my-awesome-service",
-  host: "localhost",
-  port: 24224,
+  Origin: "my-awesome-service",
+  Host: "localhost",
+  Port: 24224,
 })
 
 // Create an event

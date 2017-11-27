@@ -1,0 +1,7 @@
+steps:
+  - name: 'unit test'
+    env:
+      BUILD_ARGS: "tests"
+    command: scripts/build.sh
+    agents:
+      location: aws
