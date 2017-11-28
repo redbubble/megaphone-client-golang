@@ -11,6 +11,8 @@ type fluentLogger struct {
 	Fluent *fluent.Fluent
 }
 
+// NewFluentLogger returns a Logger that can publish events to Megaphone
+// via a Megaphone Fluentd container.
 func NewFluentLogger(fluentHost string, fluentPort int) (logger *fluentLogger, err error) {
 	logger = &fluentLogger{}
 	logger.Fluent, err = fluent.New(fluent.Config{
