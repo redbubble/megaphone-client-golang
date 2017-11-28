@@ -8,7 +8,9 @@ import (
 type fileLogger struct {
 }
 
-func NewFileLogger() (*fileLogger, error) {
+// NewFileLogger returns a configured file logger to publish events to a local file,
+// mainly for development purposes.
+func NewFileLogger() (Logger, error) {
 	return &fileLogger{}, nil
 }
 
