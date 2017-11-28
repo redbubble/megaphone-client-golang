@@ -15,10 +15,10 @@ Install the package:
 
 ```bash
 # Using Go get:
-go get github.com/redbubble/megaphone-client-golang
+go get github.com/redbubble/megaphone-client-golang/megaphone
 
 # Using govendor:
-govendor fetch github.com/redbubble/megaphone-client-golang@v1
+govendor fetch github.com/redbubble/megaphone-client-golang/megaphone@v1
 ```
 
 Usage
