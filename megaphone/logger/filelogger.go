@@ -10,7 +10,7 @@ type fileLogger struct {
 
 // NewFileLogger returns a configured file logger to publish events to a local file,
 // mainly for development purposes.
-func NewFileLogger() (*fileLogger, error) {
+func NewFileLogger() (Logger, error) {
 	return &fileLogger{}, nil
 }
 
