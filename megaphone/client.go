@@ -21,43 +21,65 @@ type Config struct {
 // a FluentLogger is provided, allowing for easy local development
 // in absence of a local Megaphone Fluentd container.
 type Client struct {
-	config Config
 	logger logger.Logger
+	Config
 }
 
-// NewClient returns a configured Megaphone Client.
-func NewClient(config Config) (client *Client, err error) {
-	client = &Client{}
-	client.config = config
+// Publisher provides means to publish an event.
+type Publisher interface {
+	Publish(topic, subtopic, schema, partitionKey string, payload []byte) (err error)
+}
 
-	if client.config.Host == "" {
-		client.config.Host = os.Getenv("MEGAPHONE_FLUENT_HOST")
+func newConfig(origin, host string, port int) (Config, error) {
+	config := Config{
+		Origin: origin,
+		Host:   host,
+		Port:   port,
 	}
 
-	port := os.Getenv("MEGAPHONE_FLUENT_PORT")
-	if port != "" {
-		client.config.Port, err = strconv.Atoi(port)
-		if err != nil {
-			return client, NewConfigErrorWithField(err, "port")
+	if config.Host == "" {
+		config.Host = os.Getenv("MEGAPHONE_FLUENT_HOST")
+	}
+
+	if port == 0 {
+		sPort := os.Getenv("MEGAPHONE_FLUENT_PORT")
+		if sPort != "" {
+			var err error
+			config.Port, err = strconv.Atoi(sPort)
+			if err != nil {
+				return config, NewConfigErrorWithField(err, "port")
+			}
 		}
 	}
 
-	client.logger, err = logger.NewLogger(config.Host, config.Port)
+	return config, nil
+}
+
+// NewClient returns a configured Megaphone Client.
+func NewClient(origin, host string, port int) (c Publisher, err error) {
+	client := &Client{}
+	client.Config, err = newConfig(origin, host, port)
 	if err != nil {
-		return client, NewConfigError(err)
+		return client, err
 	}
 
-	return
+	var errLogger error
+	client.logger, errLogger = logger.NewLogger(client.Host, client.Port)
+	if errLogger != nil {
+		return client, NewConfigError(errLogger)
+	}
+
+	c = client
+	return c, nil
 }
 
 // Publish sends an event to Megaphone, or to a local file depending on the Client configuration.
 func (c *Client) Publish(topic, subtopic, schema, partitionKey string, payload []byte) (err error) {
 	event, err := newEvent(topic, subtopic, schema, partitionKey, payload)
-	event.Origin = c.config.Origin
-
 	if err != nil {
 		return NewPayloadError(err, string(payload))
 	}
+	event.Origin = c.Origin
 
 	eventJSON, err := event.toJSON()
 	if err != nil {
@@ -68,6 +90,5 @@ func (c *Client) Publish(topic, subtopic, schema, partitionKey string, payload [
 	if err != nil {
 		return NewPublicationError(err, eventJSON)
 	}
-
 	return nil
 }

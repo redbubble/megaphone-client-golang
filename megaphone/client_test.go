@@ -17,25 +17,20 @@ func TestClient(t *testing.T) {
 			Port:   24224,
 		}
 	}
-
-	t.Run("NewClient()", func(t *testing.T) {
+	t.Run("newConfig()", func(t *testing.T) {
 		t.Run("Host defaults to MEGAPHONE_FLUENT_HOST", func(t *testing.T) {
-			config := getConfig()
-			config.Host = ""
 			expectedHost := "localhost"
 			os.Setenv("MEGAPHONE_FLUENT_HOST", expectedHost)
-			client, err := NewClient(config)
+			config, err := newConfig("my-awesome-service", "", 24224)
 			require.Nil(t, err)
-			assert.Equal(t, expectedHost, client.config.Host)
+			assert.Equal(t, expectedHost, config.Host)
 			os.Unsetenv("MEGAPHONE_FLUENT_HOST")
 		})
 
 		t.Run("It fails when the port set by the user is not an valid number", func(t *testing.T) {
-			config := getConfig()
 			os.Setenv("MEGAPHONE_FLUENT_PORT", "not a valid port")
-			_, err := NewClient(config)
-			_, ok := err.(*ConfigError)
-			assert.Equal(t, true, ok)
+			_, err := newConfig("my-awesome-service", "", 0)
+			require.NotNil(t, err)
 			os.Unsetenv("MEGAPHONE_FLUENT_PORT")
 		})
 	})
@@ -64,7 +59,7 @@ func TestClient(t *testing.T) {
 
 		t.Run("It publishes a message through the fluent logger", func(t *testing.T) {
 			config := getConfig()
-			client, err := NewClient(config)
+			client, err := NewClient(config.Origin, config.Host, config.Port)
 			require.Nil(t, err)
 
 			eventFields := GetTestEventFields()
@@ -75,7 +70,7 @@ func TestClient(t *testing.T) {
 		t.Run("It publishes a message through the file logger", func(t *testing.T) {
 			config := getConfig()
 			config.Port = 0
-			client, err := NewClient(config)
+			client, err := NewClient(config.Origin, config.Host, config.Port)
 			require.Nil(t, err)
 
 			eventFields := GetTestEventFields()
@@ -85,7 +80,7 @@ func TestClient(t *testing.T) {
 
 		t.Run("It returns a new payload error", func(t *testing.T) {
 			config := getConfig()
-			client, err := NewClient(config)
+			client, err := NewClient(config.Origin, config.Host, config.Port)
 			require.Nil(t, err)
 
 			eventFields := GetTestEventFields()
