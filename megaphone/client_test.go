@@ -68,7 +68,7 @@ func TestClient(t *testing.T) {
 			require.Nil(t, err)
 
 			eventFields := GetTestEventFields()
-			err = client.Publish(eventFields.Origin, eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
+			err = client.Publish(eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
 			require.Nil(t, err)
 		})
 
@@ -79,7 +79,7 @@ func TestClient(t *testing.T) {
 			require.Nil(t, err)
 
 			eventFields := GetTestEventFields()
-			err = client.Publish(eventFields.Origin, eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
+			err = client.Publish(eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
 			require.Nil(t, err)
 		})
 
@@ -90,7 +90,7 @@ func TestClient(t *testing.T) {
 
 			eventFields := GetTestEventFields()
 			eventFields.Payload = []byte("{\"url\" \"https://www.redbubble.com/people/wytrab8/works/26039653-toadally-rad\"}")
-			err = client.Publish(eventFields.Origin, eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
+			err = client.Publish(eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
 			_, ok := err.(*PayloadError)
 			assert.Equal(t, true, ok)
 		})

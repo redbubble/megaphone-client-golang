@@ -51,8 +51,10 @@ func NewClient(config Config) (client *Client, err error) {
 }
 
 // Publish sends an event to Megaphone, or to a local file depending on the Client configuration.
-func (c *Client) Publish(origin, topic, subtopic, schema, partitionKey string, payload []byte) (err error) {
-	event, err := newEvent(origin, topic, subtopic, schema, partitionKey, payload)
+func (c *Client) Publish(topic, subtopic, schema, partitionKey string, payload []byte) (err error) {
+	event, err := newEvent(topic, subtopic, schema, partitionKey, payload)
+	event.Origin = c.config.Origin
+
 	if err != nil {
 		return NewPayloadError(err, string(payload))
 	}
