@@ -1,6 +1,8 @@
 Megaphone Golang client
 =======================
 
+[![GoDoc](https://godoc.org/github.com/redbubble/megaphone-client-golang/megaphone?status.svg)](https://godoc.org/github.com/redbubble/megaphone-client-golang/megaphone)
+[![Go Report Card](https://goreportcard.com/badge/github.com/redbubble/megaphone-client-golang/megaphone)](https://goreportcard.com/report/github.com/redbubble/megaphone-client-golang/megaphone)
 [![Build status](https://badge.buildkite.com/8d56deb25d44956e5628dcae206230d344dbb16ca1798f7bd9.svg?branch=master)](https://buildkite.com/redbubble/megaphone-client-golang)
 
 Send events to [Megaphone][megaphone] from [Golang][golang] applications.
