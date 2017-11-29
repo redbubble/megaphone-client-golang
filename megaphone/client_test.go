@@ -17,25 +17,20 @@ func TestClient(t *testing.T) {
 			Port:   24224,
 		}
 	}
-
-	t.Run("NewClient()", func(t *testing.T) {
+	t.Run("newConfig()", func(t *testing.T) {
 		t.Run("Host defaults to MEGAPHONE_FLUENT_HOST", func(t *testing.T) {
-			config := getConfig()
-			config.Host = ""
 			expectedHost := "localhost"
 			os.Setenv("MEGAPHONE_FLUENT_HOST", expectedHost)
-			client, err := NewClient(config)
+			config, err := newConfig("my-awesome-service", "", 24224)
 			require.Nil(t, err)
-			assert.Equal(t, expectedHost, client.config.Host)
+			assert.Equal(t, expectedHost, config.Host)
 			os.Unsetenv("MEGAPHONE_FLUENT_HOST")
 		})
 
 		t.Run("It fails when the port set by the user is not an valid number", func(t *testing.T) {
-			config := getConfig()
 			os.Setenv("MEGAPHONE_FLUENT_PORT", "not a valid port")
-			_, err := NewClient(config)
-			_, ok := err.(*ConfigError)
-			assert.Equal(t, true, ok)
+			_, err := newConfig("my-awesome-service", "", 0)
+			require.NotNil(t, err)
 			os.Unsetenv("MEGAPHONE_FLUENT_PORT")
 		})
 	})
@@ -64,33 +59,33 @@ func TestClient(t *testing.T) {
 
 		t.Run("It publishes a message through the fluent logger", func(t *testing.T) {
 			config := getConfig()
-			client, err := NewClient(config)
+			client, err := NewClient(config.Origin, config.Host, config.Port)
 			require.Nil(t, err)
 
 			eventFields := GetTestEventFields()
-			err = client.Publish(eventFields.Origin, eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
+			err = client.Publish(eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
 			require.Nil(t, err)
 		})
 
 		t.Run("It publishes a message through the file logger", func(t *testing.T) {
 			config := getConfig()
 			config.Port = 0
-			client, err := NewClient(config)
+			client, err := NewClient(config.Origin, config.Host, config.Port)
 			require.Nil(t, err)
 
 			eventFields := GetTestEventFields()
-			err = client.Publish(eventFields.Origin, eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
+			err = client.Publish(eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
 			require.Nil(t, err)
 		})
 
 		t.Run("It returns a new payload error", func(t *testing.T) {
 			config := getConfig()
-			client, err := NewClient(config)
+			client, err := NewClient(config.Origin, config.Host, config.Port)
 			require.Nil(t, err)
 
 			eventFields := GetTestEventFields()
 			eventFields.Payload = []byte("{\"url\" \"https://www.redbubble.com/people/wytrab8/works/26039653-toadally-rad\"}")
-			err = client.Publish(eventFields.Origin, eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
+			err = client.Publish(eventFields.Topic, eventFields.Subtopic, eventFields.Schema, eventFields.PartitionKey, eventFields.Payload)
 			_, ok := err.(*PayloadError)
 			assert.Equal(t, true, ok)
 		})

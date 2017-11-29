@@ -17,7 +17,8 @@ func TestEvent(t *testing.T) {
 		partitionKey := "1357924680"
 		payload := []byte("{\"url\": \"https://www.redbubble.com/people/wytrab8/works/26039653-toadally-rad\"}")
 
-		actualEvent, err := newEvent(origin, topic, subtopic, schema, partitionKey, payload)
+		actualEvent, err := newEvent(topic, subtopic, schema, partitionKey, payload)
+		actualEvent.Origin = origin
 		assert.Nil(t, err)
 		json, err := actualEvent.toJSON()
 		assert.Nil(t, err)

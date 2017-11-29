@@ -13,7 +13,7 @@ type event struct {
 	Payload      map[string]interface{} `json:"data"`
 }
 
-func newEvent(origin, topic, subtopic, schema, partitionKey string, payload []byte) (*event, error) {
+func newEvent(topic, subtopic, schema, partitionKey string, payload []byte) (*event, error) {
 	var mapPayload map[string]interface{}
 	err := json.Unmarshal([]byte(payload), &mapPayload)
 	if err != nil {
@@ -21,7 +21,6 @@ func newEvent(origin, topic, subtopic, schema, partitionKey string, payload []by
 	}
 
 	return &event{
-		Origin:       origin,
 		Topic:        topic,
 		Subtopic:     subtopic,
 		Schema:       schema,
