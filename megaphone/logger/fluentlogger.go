@@ -15,6 +15,7 @@ type fluentLogger struct {
 func NewFluentLogger(fluentHost string, fluentPort int) (logger Logger, err error) {
 	fluentLogger := &fluentLogger{}
 	fluentLogger.Fluent, err = fluent.New(fluent.Config{
+		TagPrefix:  "megaphone",
 		FluentHost: fluentHost,
 		FluentPort: fluentPort,
 	})
