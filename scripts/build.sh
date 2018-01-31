@@ -1,6 +1,0 @@
-#!/bin/bash
-
-TARGETS=$BUILD_ARGS
-make $TARGETS
-EXIT_CODE=$?
-exit $EXIT_CODE
