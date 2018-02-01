@@ -1,17 +1,15 @@
-Megaphone Golang client
-=======================
+# Megaphone Golang client
 
 [![GoDoc](https://godoc.org/github.com/redbubble/megaphone-client-golang/megaphone?status.svg)](https://godoc.org/github.com/redbubble/megaphone-client-golang/megaphone)
 [![Go Report Card](https://goreportcard.com/badge/github.com/redbubble/megaphone-client-golang/megaphone)](https://goreportcard.com/report/github.com/redbubble/megaphone-client-golang/megaphone)
-[![Build status](https://badge.buildkite.com/8d56deb25d44956e5628dcae206230d344dbb16ca1798f7bd9.svg?branch=master)](https://buildkite.com/redbubble/megaphone-client-golang)
+[![Build Status](https://travis-ci.org/redbubble/megaphone-client-golang.svg?branch=master)](https://travis-ci.org/redbubble/megaphone-client-golang)
 
 Send events to [Megaphone][megaphone] from [Golang][golang] applications.
 
-  [megaphone]: https://github.com/redbubble/megaphone
-  [golang]: https://golang.org/
+[megaphone]: https://github.com/redbubble/megaphone
+[golang]: https://golang.org/
 
-Getting Started
----------------
+## Getting Started
 
 Install the package:
 
@@ -23,18 +21,17 @@ go get github.com/redbubble/megaphone-client-golang/megaphone
 govendor fetch github.com/redbubble/megaphone-client-golang/megaphone@v1
 ```
 
-Usage
------
+## Usage
 
 In order to be as unobstrusive as possible, this client will append events to local files (e.g. `./work-updates.stream`) unless:
 
-- the `MEGAPHONE_FLUENT_HOST` and `MEGAPHONE_FLUENT_PORT` environment variables are set.
-- **or** the Fluentd host and port values are passed as arguments to the client's constructor
+* the `MEGAPHONE_FLUENT_HOST` and `MEGAPHONE_FLUENT_PORT` environment variables are set.
+* **or** the Fluentd host and port values are passed as arguments to the client's constructor
 
 That behaviour ensures that unless you want to send events to the Megaphone [streams][stream], you do not need to [start Fluentd][megaphone-fluentd] at all.
 
-  [stream]: https://github.com/redbubble/com/megaphone#stream
-  [megaphone-fluentd]: https://github.com/redbubble/megaphone-fluentd-container
+[stream]: https://github.com/redbubble/com/megaphone#stream
+[megaphone-fluentd]: https://github.com/redbubble/megaphone-fluentd-container
 
 ### Publishing events
 
@@ -64,17 +61,15 @@ if err != nil {
 }
 ```
 
-Credits
--------
+## Credits
 
 [![](doc/redbubble.png)][redbubble]
 
 This Megaphone Golang client is maintained and funded by [Redbubble][redbubble].
 
-  [redbubble]: https://www.redbubble.com
+[redbubble]: https://www.redbubble.com
 
-License
--------
+## License
 
     megaphone
     Copyright (C) 2017 Redbubble

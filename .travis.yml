@@ -1,0 +1,10 @@
+sudo: required
+
+
+language: go
+go:
+  - 1.9
+  - master
+services:
+  - docker
+script: make tests
