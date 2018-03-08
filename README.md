@@ -21,7 +21,7 @@ go get github.com/redbubble/megaphone-client-golang/megaphone
 govendor fetch github.com/redbubble/megaphone-client-golang/megaphone@v1
 ```
 
-## Usage
+## Usage for Fluentd Client
 
 In order to be as unobstrusive as possible, this client will append events to local files (e.g. `./work-updates.stream`) unless:
 
@@ -41,11 +41,7 @@ That behaviour ensures that unless you want to send events to the Megaphone [str
 
 ```golang
 // Configure a Megaphone client for your awesome service
-client, err := megaphone.NewClient(megaphone.Config{
-  Origin: "my-awesome-service",
-  Host: "localhost",
-  Port: 24224,
-})
+client, err := megaphone.NewFluentdClient("my-awesome-service", "localhost", 24224)
 
 // Create an event
 topic := "work-updates"

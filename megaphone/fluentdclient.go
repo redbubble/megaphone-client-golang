@@ -9,8 +9,8 @@ import (
 	"github.com/redbubble/megaphone-client-golang/megaphone/logger"
 )
 
-// Config holds the configuration for a Client.
-type Config struct {
+// FluentdConfig holds the configuration for a FluentdClient.
+type FluentdConfig struct {
 	Origin string
 	Host   string
 	Port   int
@@ -20,18 +20,13 @@ type Config struct {
 // Conventionally, a FileLogger is used if no configuration for
 // a FluentLogger is provided, allowing for easy local development
 // in absence of a local Megaphone Fluentd container.
-type Client struct {
+type FluentdClient struct {
 	logger logger.Logger
-	Config
+	FluentdConfig
 }
 
-// Publisher provides means to publish an event.
-type Publisher interface {
-	Publish(topic, subtopic, schema, partitionKey string, payload []byte) (err error)
-}
-
-func newConfig(origin, host string, port int) (Config, error) {
-	config := Config{
+func newConfig(origin, host string, port int) (FluentdConfig, error) {
+	config := FluentdConfig{
 		Origin: origin,
 		Host:   host,
 		Port:   port,
@@ -55,10 +50,10 @@ func newConfig(origin, host string, port int) (Config, error) {
 	return config, nil
 }
 
-// NewClient returns a configured Megaphone Client.
-func NewClient(origin, host string, port int) (c Publisher, err error) {
-	client := &Client{}
-	client.Config, err = newConfig(origin, host, port)
+// NewFluentdClient returns a configured Megaphone FluentdClient.
+func NewFluentdClient(origin, host string, port int) (c Publisher, err error) {
+	client := &FluentdClient{}
+	client.FluentdConfig, err = newConfig(origin, host, port)
 	if err != nil {
 		return client, err
 	}
@@ -74,7 +69,7 @@ func NewClient(origin, host string, port int) (c Publisher, err error) {
 }
 
 // Publish sends an event to Megaphone, or to a local file depending on the Client configuration.
-func (c *Client) Publish(topic, subtopic, schema, partitionKey string, payload []byte) (err error) {
+func (c *FluentdClient) Publish(topic, subtopic, schema, partitionKey string, payload []byte) (err error) {
 	event, err := newEvent(topic, subtopic, schema, partitionKey, payload)
 	if err != nil {
 		return NewPayloadError(err, string(payload))
