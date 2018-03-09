@@ -2,7 +2,10 @@ package megaphone
 
 import (
 	"encoding/json"
+	"fmt"
 )
+
+const streamNameFormat = "megaphone-streams-%s-%s"
 
 type event struct {
 	Origin       string                 `json:"origin"`
@@ -30,9 +33,17 @@ func newEvent(topic, subtopic, schema, partitionKey string, payload []byte) (*ev
 }
 
 func (e *event) toJSON() (string, error) {
-	bytes, err := json.Marshal(e)
+	bytes, err := e.toJSONBytes()
 	if err != nil {
 		return "", err
 	}
 	return string(bytes), nil
+}
+
+func (e *event) toJSONBytes() ([]byte, error) {
+	return json.Marshal(e)
+}
+
+func (e *event) streamName(deployEnv string) string {
+	return fmt.Sprintf(streamNameFormat, deployEnv, e.Topic)
 }
