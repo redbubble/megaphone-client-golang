@@ -13,7 +13,7 @@ type KinesisSynchronousPublisher struct {
 }
 
 func NewKinesisSynchronousPublisher(config kinesisclient.Config) (*KinesisSynchronousPublisher, error) {
-	client, err := kinesisclient.ProvideKinesisClient(config)
+	client, err := kinesisclient.Provide(config)
 	if err != nil {
 		return nil, err
 	}

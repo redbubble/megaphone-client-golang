@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
 )
 
-func ProvideKinesisClient(config Config) (*kinesis.Kinesis, error) {
+func Provide(config Config) (*kinesis.Kinesis, error) {
 	if config.HostedOnAWS {
 		sess := session.Must(session.NewSession(&aws.Config{
 			LogLevel: aws.LogLevel(aws.LogOff),
