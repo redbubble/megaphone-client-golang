@@ -15,13 +15,13 @@ func TestKinesisSyncClient(t *testing.T) {
 
 	var required *require.Assertions
 	var awsKinesisClient *mock.MockKinesisAPI
-	var kinesisSyncClient *KinesisSyncClient
+	var kinesisSyncClient *KinesisSynchronousPublisher
 
 	setup := func(t *testing.T) {
 		RegisterMockTestingT(t)
 
 		awsKinesisClient = mock.NewMockKinesisAPI()
-		kinesisSyncClient = &KinesisSyncClient{
+		kinesisSyncClient = &KinesisSynchronousPublisher{
 			kinesisClient: awsKinesisClient,
 			config: kinesisclient.Config{
 				Origin:    "test-client",

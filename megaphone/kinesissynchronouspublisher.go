@@ -7,23 +7,23 @@ import (
 	"github.com/redbubble/megaphone-client-golang/megaphone/kinesisclient"
 )
 
-type KinesisSyncClient struct {
+type KinesisSynchronousPublisher struct {
 	kinesisClient kinesisiface.KinesisAPI
 	config        kinesisclient.Config
 }
 
-func NewKinesisSyncClient(config kinesisclient.Config) (*KinesisSyncClient, error) {
+func NewKinesisSynchronousPublisher(config kinesisclient.Config) (*KinesisSynchronousPublisher, error) {
 	client, err := kinesisclient.ProvideKinesisClient(config)
 	if err != nil {
 		return nil, err
 	}
-	return &KinesisSyncClient{
+	return &KinesisSynchronousPublisher{
 		config:        config,
 		kinesisClient: client,
 	}, nil
 }
 
-func (c *KinesisSyncClient) Publish(topic, subtopic, schema, partitionKey string, payload []byte) error {
+func (c *KinesisSynchronousPublisher) Publish(topic, subtopic, schema, partitionKey string, payload []byte) error {
 	event, err := newEvent(topic, subtopic, schema, partitionKey, payload)
 	if err != nil {
 		return err
