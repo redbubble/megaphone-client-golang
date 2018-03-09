@@ -20,7 +20,7 @@ unit-test: ## Run the unit test suite
 		--network megaphone-network \
 		-e MEGAPHONE_FLUENT_HOST="fluent-container" \
 		--volume ${PWD}:/go/src/github.com/redbubble/megaphone-client-golang \
-		-it golang:1.9-alpine /bin/sh -c 'cd /go/src/github.com/redbubble/megaphone-client-golang && go test -v -p 1 -cover `go list ./...`'
+		-it golang:1.10-alpine /bin/sh -c 'cd /go/src/github.com/redbubble/megaphone-client-golang && go test -v -p 1 -cover `go list ./...`'
 
 create-fluent-container: ## Create and start the fluent container needed for the tests
 	@echo "--- Creating the fluent container"

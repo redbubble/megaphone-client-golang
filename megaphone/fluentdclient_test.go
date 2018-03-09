@@ -10,8 +10,8 @@ import (
 
 func TestClient(t *testing.T) {
 
-	getConfig := func() Config {
-		return Config{
+	getConfig := func() FluentdConfig {
+		return FluentdConfig{
 			Origin: "my-awesome-service",
 			Host:   os.Getenv("MEGAPHONE_FLUENT_HOST"),
 			Port:   24224,
@@ -59,7 +59,7 @@ func TestClient(t *testing.T) {
 
 		t.Run("It publishes a message through the fluent logger", func(t *testing.T) {
 			config := getConfig()
-			client, err := NewClient(config.Origin, config.Host, config.Port)
+			client, err := NewFluentdClient(config.Origin, config.Host, config.Port)
 			require.Nil(t, err)
 
 			eventFields := GetTestEventFields()
@@ -70,7 +70,7 @@ func TestClient(t *testing.T) {
 		t.Run("It publishes a message through the file logger", func(t *testing.T) {
 			config := getConfig()
 			config.Port = 0
-			client, err := NewClient(config.Origin, config.Host, config.Port)
+			client, err := NewFluentdClient(config.Origin, config.Host, config.Port)
 			require.Nil(t, err)
 
 			eventFields := GetTestEventFields()
@@ -80,7 +80,7 @@ func TestClient(t *testing.T) {
 
 		t.Run("It returns a new payload error", func(t *testing.T) {
 			config := getConfig()
-			client, err := NewClient(config.Origin, config.Host, config.Port)
+			client, err := NewFluentdClient(config.Origin, config.Host, config.Port)
 			require.Nil(t, err)
 
 			eventFields := GetTestEventFields()

@@ -1,0 +1,4 @@
+### Prefix:
+### go run $GOPATH/src/github.com/redbubble/megaphone-client-golang/vendor/github.com/petergtz/pegomock/pegomock/main.go generate
+
+--package=mock --output=mock_kinesis.go github.com/aws/aws-sdk-go/service/kinesis/kinesisiface KinesisAPI

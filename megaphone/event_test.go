@@ -4,12 +4,13 @@ import (
 	"testing"
 
 	"github.com/karlseguin/typed"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestEvent(t *testing.T) {
 
 	t.Run("toJSON()", func(t *testing.T) {
+		required := require.New(t)
 		origin := "my-awesome-service"
 		topic := "work-updates"
 		subtopic := "work-metadata-updated"
@@ -19,18 +20,27 @@ func TestEvent(t *testing.T) {
 
 		actualEvent, err := newEvent(topic, subtopic, schema, partitionKey, payload)
 		actualEvent.Origin = origin
-		assert.Nil(t, err)
+		required.NoError(err)
 		json, err := actualEvent.toJSON()
-		assert.Nil(t, err)
+		required.NoError(err)
 		res, err := typed.JsonString(json)
-		assert.Nil(t, err)
+		required.NoError(err)
 
-		assert.Equal(t, origin, res.String("origin"))
-		assert.Equal(t, topic, res.String("topic"))
-		assert.Equal(t, subtopic, res.String("subtopic"))
-		assert.Equal(t, schema, res.String("schema"))
-		assert.Equal(t, partitionKey, res.String("partitionKey"))
-		assert.Equal(t, "https://www.redbubble.com/people/wytrab8/works/26039653-toadally-rad", res.Object("data").String("url"))
+		required.Equal(origin, res.String("origin"))
+		required.Equal(topic, res.String("topic"))
+		required.Equal(subtopic, res.String("subtopic"))
+		required.Equal(schema, res.String("schema"))
+		required.Equal(partitionKey, res.String("partitionKey"))
+		required.Equal("https://www.redbubble.com/people/wytrab8/works/26039653-toadally-rad", res.Object("data").String("url"))
+	})
+
+	t.Run("streamName()", func(t *testing.T) {
+		e := &event{
+			Topic: "mega-updates",
+		}
+		deployEnv := "staging"
+
+		require.Equal(t, "megaphone-streams-staging-mega-updates", e.streamName(deployEnv))
 	})
 
 }
