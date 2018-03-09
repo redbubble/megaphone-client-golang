@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"github.com/aws/aws-sdk-go/service/kinesis"
 	"errors"
+	"github.com/redbubble/megaphone-client-golang/megaphone/kinesisclient"
 )
 
 func TestKinesisSyncClient(t *testing.T) {
@@ -22,8 +23,8 @@ func TestKinesisSyncClient(t *testing.T) {
 		awsKinesisClient = mock.NewMockKinesisAPI()
 		kinesisSyncClient = &KinesisSyncClient{
 			kinesisClient: awsKinesisClient,
-			clientConfig: KinesisClientConfig{
-				Config:    Config{"test-client"},
+			config: kinesisclient.Config{
+				Origin:    "test-client",
 				DeployEnv: "test-env",
 			},
 		}

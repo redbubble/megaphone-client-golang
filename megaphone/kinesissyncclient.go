@@ -4,11 +4,23 @@ import (
 	"github.com/aws/aws-sdk-go/service/kinesis"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/kinesis/kinesisiface"
+	"github.com/redbubble/megaphone-client-golang/megaphone/kinesisclient"
 )
 
 type KinesisSyncClient struct {
 	kinesisClient kinesisiface.KinesisAPI
-	clientConfig  KinesisClientConfig
+	config        kinesisclient.Config
+}
+
+func NewKinesisSyncClient(config kinesisclient.Config) (*KinesisSyncClient, error) {
+	client, err := kinesisclient.ProvideKinesisClient(config)
+	if err != nil {
+		return nil, err
+	}
+	return &KinesisSyncClient{
+		config:        config,
+		kinesisClient: client,
+	}, nil
 }
 
 func (c *KinesisSyncClient) Publish(topic, subtopic, schema, partitionKey string, payload []byte) error {
@@ -16,7 +28,7 @@ func (c *KinesisSyncClient) Publish(topic, subtopic, schema, partitionKey string
 	if err != nil {
 		return err
 	}
-	event.Origin = c.clientConfig.Origin
+	event.Origin = c.config.Origin
 	bytes, err := event.toJSONBytes()
 	if err != nil {
 		return err
@@ -24,7 +36,7 @@ func (c *KinesisSyncClient) Publish(topic, subtopic, schema, partitionKey string
 	input := &kinesis.PutRecordInput{
 		Data:         bytes,
 		PartitionKey: &partitionKey,
-		StreamName:   aws.String(event.streamName(c.clientConfig.DeployEnv)),
+		StreamName:   aws.String(event.streamName(c.config.DeployEnv)),
 	}
 	err = input.Validate()
 	if err != nil {
