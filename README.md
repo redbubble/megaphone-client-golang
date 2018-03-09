@@ -57,6 +57,38 @@ if err != nil {
 }
 ```
 
+## Usage using Kinesis Publisher (synchronous)
+
+This publisher writes to Kinesis directly, using an AWS Kinesis client.
+
+### Publishing events
+
+1. Create a new client 
+
+```golang
+
+publisher, err := megaphone.NewKinesisSynchronousPublisher(kinesisclient.Config{
+  Origin: "my-awesome-service",
+  DeployEnv: "test",
+  HostedOnAWS: true,
+})
+```
+
+2. Publish your event
+```golang
+topic := "work-updates"
+subtopic := "work-metadata-updated"
+schema := "https://github.com/redbubble/megaphone-event-type-registry/blob/master/streams/work-updates-schema-1.0.0.json"
+partitionKey := "1357924680" # the Work ID in this case
+payload := "{ url: \"https://www.redbubble.com/people/wytrab8/works/26039653-toadally-rad\" }"
+
+err := publisher.Publish(topic, subtopic, schema, partitionKey, payload)
+if err != nil {
+  // handle the error
+}
+
+```
+
 ## Credits
 
 [![](doc/redbubble.png)][redbubble]
