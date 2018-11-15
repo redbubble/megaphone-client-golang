@@ -1,14 +1,14 @@
 package megaphone
 
 import (
-	"testing"
-	"github.com/stretchr/testify/require"
-	. "github.com/petergtz/pegomock"
-	"github.com/redbubble/megaphone-client-golang/megaphone/mock"
-	"reflect"
-	"github.com/aws/aws-sdk-go/service/kinesis"
 	"errors"
+	"github.com/aws/aws-sdk-go/service/kinesis"
+	. "github.com/petergtz/pegomock"
 	"github.com/redbubble/megaphone-client-golang/megaphone/kinesisclient"
+	"github.com/redbubble/megaphone-client-golang/megaphone/mock"
+	"github.com/stretchr/testify/require"
+	"reflect"
+	"testing"
 )
 
 func TestKinesisSyncClient(t *testing.T) {
@@ -85,6 +85,30 @@ func TestKinesisSyncClient(t *testing.T) {
 
 			required.Error(err)
 			awsKinesisClient.VerifyWasCalledOnce().PutRecord(anyPutRecordInput())
+		})
+	})
+
+	t.Run("PublishRawMessage", func(t *testing.T) {
+		t.Run("kinesisClient.PutRecord", func(t *testing.T) {
+			setup(t)
+
+			streamName := "stream"
+			partitionKey := "partitionKey"
+			messageString := `{
+						  		"event": "test-event",
+  								"workId": "workId",
+								"type": "Test"
+							 }`
+			messageBytes := []byte(messageString)
+			err := kinesisSyncClient.PublishRawMessage(streamName, partitionKey, messageBytes)
+
+			expectedPutRecordInput := &kinesis.PutRecordInput{
+				Data:         messageBytes,
+				PartitionKey: &partitionKey,
+				StreamName:   &streamName,
+			}
+			required.NoError(err)
+			awsKinesisClient.VerifyWasCalledOnce().PutRecord(expectedPutRecordInput).GetCapturedArguments()
 		})
 	})
 }

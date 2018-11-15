@@ -3,6 +3,7 @@
 package megaphone
 
 import (
+	"errors"
 	"os"
 	"strconv"
 
@@ -86,4 +87,8 @@ func (c *FluentdClient) Publish(topic, subtopic, schema, partitionKey string, pa
 		return NewPublicationError(err, eventJSON)
 	}
 	return nil
+}
+
+func (c *FluentdClient) PublishRawMessage(streamName string, partitionKey string, messageBytes []byte) error {
+	return errors.New("The method has not been implemented")
 }
