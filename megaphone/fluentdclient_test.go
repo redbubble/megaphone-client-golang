@@ -90,5 +90,14 @@ func TestClient(t *testing.T) {
 			assert.Equal(t, true, ok)
 		})
 	})
+	
+	t.Run("PublishRawMessage()", func(t *testing.T) {
+		required := require.New(t)
+		config := getConfig()
+		client, err := NewFluentdClient(config.Origin, config.Host, config.Port)
+
+		err = client.PublishRawMessage("streamName", "partitionKey", nil)
+		required.Error(err)
+	})
 
 }
