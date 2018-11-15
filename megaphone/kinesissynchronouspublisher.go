@@ -1,7 +1,6 @@
 package megaphone
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/kinesis"
 	"github.com/aws/aws-sdk-go/service/kinesis/kinesisiface"
 	"github.com/redbubble/megaphone-client-golang/megaphone/kinesisclient"
@@ -33,18 +32,14 @@ func (c *KinesisSynchronousPublisher) Publish(topic, subtopic, schema, partition
 	if err != nil {
 		return err
 	}
-	err = c.PublishRawMessage(event.streamName(c.config.DeployEnv), partitionKey, bytes)
-	if err != nil {
-		return err
-	}
-	return nil
+	return c.PublishRawMessage(event.streamName(c.config.DeployEnv), partitionKey, bytes)
 }
 
 func (c *KinesisSynchronousPublisher) PublishRawMessage(streamName string, partitionKey string, messageBytes []byte) error {
 	input := &kinesis.PutRecordInput{
 		Data:         messageBytes,
 		PartitionKey: &partitionKey,
-		StreamName:   aws.String(streamName),
+		StreamName:   &streamName,
 	}
 	err := input.Validate()
 	if err != nil {
