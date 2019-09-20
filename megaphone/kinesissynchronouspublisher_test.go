@@ -2,13 +2,14 @@ package megaphone
 
 import (
 	"errors"
+	"reflect"
+	"testing"
+
 	"github.com/aws/aws-sdk-go/service/kinesis"
 	. "github.com/petergtz/pegomock"
 	"github.com/redbubble/megaphone-client-golang/megaphone/kinesisclient"
 	"github.com/redbubble/megaphone-client-golang/megaphone/mock"
 	"github.com/stretchr/testify/require"
-	"reflect"
-	"testing"
 )
 
 func TestKinesisSyncClient(t *testing.T) {
