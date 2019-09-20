@@ -1,6 +1,7 @@
 package megaphone
 
 import (
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/kinesis"
 	"github.com/aws/aws-sdk-go/service/kinesis/kinesisiface"
 	"github.com/redbubble/megaphone-client-golang/megaphone/kinesisclient"
@@ -11,8 +12,8 @@ type KinesisSynchronousPublisher struct {
 	config        kinesisclient.Config
 }
 
-func NewKinesisSynchronousPublisher(config kinesisclient.Config) (*KinesisSynchronousPublisher, error) {
-	client, err := kinesisclient.Provide(config)
+func NewKinesisSynchronousPublisher(sess *session.Session, config kinesisclient.Config) (*KinesisSynchronousPublisher, error) {
+	client, err := kinesisclient.Provide(sess, config)
 	if err != nil {
 		return nil, err
 	}
